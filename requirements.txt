@@ -1,0 +1,8 @@
+ml-collections
+absl-py
+pandas
+matplotlib
+tensorboard
+molsets
+fcd-torch
+rdkit==2022.3.5
