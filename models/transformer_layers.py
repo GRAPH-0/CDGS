@@ -21,7 +21,7 @@ class EdgeGateTransLayer(MessagePassing):
                  heads: int = 1, dropout: float = 0., edge_dim: Optional[int] = None,
                  bias: bool = True, **kwargs):
         kwargs.setdefault('aggr', 'add')
-        super(Local_Trans_1, self).__init__(node_dim=0, **kwargs)
+        super(EdgeGateTransLayer, self).__init__(node_dim=0, **kwargs)
 
         self.x_channels = x_channels
         self.in_channels = in_channels = x_channels
