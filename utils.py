@@ -15,7 +15,7 @@ ATOM_VALENCY = {6: 4, 7: 3, 8: 2, 9: 1, 15: 3, 16: 2, 17: 1, 35: 1, 53: 1}
 bond_decoder_m = {1: Chem.rdchem.BondType.SINGLE, 2: Chem.rdchem.BondType.DOUBLE, 3: Chem.rdchem.BondType.TRIPLE}
 
 
-def restore_mol_checkpoint(ckpt_dir, state, device):
+def restore_checkpoint(ckpt_dir, state, device):
     if not os.path.exists(ckpt_dir):
         if not os.path.exists(os.path.dirname(ckpt_dir)):
             os.makedirs(os.path.dirname(ckpt_dir))
@@ -24,25 +24,18 @@ def restore_mol_checkpoint(ckpt_dir, state, device):
         return state
     else:
         loaded_state = torch.load(ckpt_dir, map_location=device)
-        state['atom_optimizer'].load_state_dict(loaded_state['atom_optimizer'])
-        state['atom_model'].load_state_dict(loaded_state['atom_model'], strict=False)
-        state['atom_ema'].load_state_dict(loaded_state['atom_ema'])
+        state['optimizer'].load_state_dict(loaded_state['optimizer'])
+        state['model'].load_state_dict(loaded_state['model'], strict=False)
+        state['ema'].load_state_dict(loaded_state['ema'])
         state['step'] = loaded_state['step']
-
-        state['bond_optimizer'].load_state_dict(loaded_state['bond_optimizer'])
-        state['bond_model'].load_state_dict(loaded_state['bond_model'], strict=False)
-        state['bond_ema'].load_state_dict(loaded_state['bond_ema'])
         return state
 
 
-def save_mol_checkpoint(ckpt_dir, state):
+def save_checkpoint(ckpt_dir, state):
     saved_state = {
-        'atom_optimizer': state['atom_optimizer'].state_dict(),
-        'atom_model': state['atom_model'].state_dict(),
-        'atom_ema': state['atom_ema'].state_dict(),
-        'bond_optimizer': state['bond_optimizer'].state_dict(),
-        'bond_model': state['bond_model'].state_dict(),
-        'bond_ema': state['bond_ema'].state_dict(),
+        'optimizer': state['optimizer'].state_dict(),
+        'model': state['model'].state_dict(),
+        'ema': state['ema'].state_dict(),
         'step': state['step']
     }
     torch.save(saved_state, ckpt_dir)

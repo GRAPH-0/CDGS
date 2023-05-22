@@ -88,7 +88,7 @@ def get_config():
     model.heads = 8
     model.dropout = 0.1
 
-    model.num_scales = 1000
+    model.num_scales = 1000  # SDE total steps (N)
     model.sigma_min = 0.01
     model.sigma_max = 50
     model.node_beta_min = 0.1

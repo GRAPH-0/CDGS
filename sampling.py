@@ -6,7 +6,7 @@ import torch
 import numpy as np
 import abc
 
-from models.utils import from_flattened_numpy, to_flattened_numpy, get_score_fn, get_multi_score_fn
+from models.utils import get_multi_score_fn
 from scipy import integrate
 # from torchdiffeq import odeint
 import sde_lib
@@ -404,7 +404,8 @@ def shared_predictor_update_fn(x, t, sde, model, predictor, probability_flow, co
     if isinstance(sde, tuple):
         score_fn = mutils.get_multi_score_fn(sde[0], sde[1], model, train=False, continuous=continuous)
     else:
-        score_fn = mutils.get_score_fn(sde, model, train=False, continuous=continuous)
+        # score_fn = mutils.get_score_fn(sde, model, train=False, continuous=continuous)
+        raise ValueError('Score function error.')
     if predictor is None:
         # Corrector-only sampler
         predictor_obj = NonePredictor(sde, score_fn, probability_flow)
@@ -420,7 +421,8 @@ def shared_corrector_update_fn(x, t, sde, model, corrector, continuous, snr, n_s
     if isinstance(sde, tuple):
         score_fn = mutils.get_multi_score_fn(sde[0], sde[1], model, train=False, continuous=continuous)
     else:
-        score_fn = mutils.get_score_fn(sde, model, train=False, continuous=continuous)
+        # score_fn = mutils.get_score_fn(sde, model, train=False, continuous=continuous)
+        raise ValueError('Score function error.')
     if corrector is None:
         # Predictor-only sampler
         corrector_obj = NoneCorrector(sde, score_fn, snr, n_steps)

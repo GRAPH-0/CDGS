@@ -33,19 +33,46 @@ def get_model(name):
     return _MODELS[name]
 
 
-def create_mol_model(config):
+def create_model(config):
     """Create the score model."""
-    atom_name = config.model.atom_name
-    atom_model = get_model(atom_name)(config)
-    atom_model = atom_model.to(config.device)
-    atom_model = torch.nn.DataParallel(atom_model)
+    model_name = config.model.name
+    score_model = get_model(model_name)(config)
+    score_model = score_model.to(config.device)
+    score_model = torch.nn.DataParallel(score_model)
+    return score_model
 
-    bond_name = config.model.bond_name
-    bond_model = get_model(bond_name)(config)
-    bond_model = bond_model.to(config.device)
-    bond_model = torch.nn.DataParallel(bond_model)
 
-    return atom_model, bond_model
+def get_model_fn(model, train=False):
+    """Create a function to give the output of the score-based model.
+
+    Args:
+        model: The score model.
+        train: `True` for training and `False` for evaluation.
+
+    Returns:
+        A model function.
+    """
+
+    def model_fn(x, labels, *args, **kwargs):
+        """Compute the output of the score-based model.
+
+        Args:
+            x: A mini-batch of input data (Adjacency matrices).
+            labels: A mini-batch of conditioning variables for time steps. Should be interpreted differently
+                for different models.
+            mask: Mask for adjacency matrices.
+
+        Returns:
+            A tuple of (model output, new mutable states)
+        """
+        if not train:
+            model.eval()
+            return model(x, labels, *args, **kwargs)
+        else:
+            model.train()
+            return model(x, labels, *args, **kwargs)
+
+    return model_fn
 
 
 def get_multi_score_fn(atom_sde, bond_sde, model, train=False, continuous=False):
