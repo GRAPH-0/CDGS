@@ -1,4 +1,9 @@
-Conditional Diffusion Based on Discrete Graph Structures for Molecular Graph Generation - AAAI 2023
+# CDGS
+
+[Conditional Diffusion Based on Discrete Graph Structures for Molecular Graph Generation](https://arxiv.org/abs/2301.00427) - AAAI 2023
+
+The extension version: Learning Joint 2D & 3D Diffusion Models for
+Complete Molecule Generation [[Paper]](https://arxiv.org/abs/2305.12347)  [[Code]](https://github.com/GRAPH-0/JODO).
 
 ## Dependencies
 
